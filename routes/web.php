@@ -11,17 +11,35 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
+
+Route::get('/admin/jobs', [JobController::class, 'adminIndex'])->name('admin.jobs.index')->middleware('role:admin');
+
 // Admin-only routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/job-applications', [AdminController::class, 'jobApplications'])->name('admin.job-applications.index');
+Route::get('/admin/jobs/{id}/view', [JobController::class, 'adminShow'])->name('admin.jobs.show');
+// Change this:
+Route::patch('/admin/jobs/{job}', [JobController::class, 'update'])->name('admin.jobs.update');
+
+// To this if using PUT in Blade:
+Route::put('/admin/jobs/{job}', [JobController::class, 'update'])->name('admin.jobs.update');
+
 
     // Job posting (admin only)
-    Route::get('/admin/jobs/create', [JobController::class, 'create'])->name('admin.jobs.create');
-    Route::post('/admin/jobs', [JobController::class, 'store'])->name('admin.jobs.store');
+    Route::get('/jobs/create', [JobController::class, 'create'])->name('admin.jobs.create');
+    Route::post('/jobs', [JobController::class, 'store'])->name('admin.jobs.store');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
+    Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 });
 
 // User-only routes
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'role:user,admin'])->group(function () {
+
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
 
     // Browse jobs and apply
@@ -32,10 +50,12 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     // View user's applications
     Route::get('/my-applications', [JobApplicationController::class, 'myApplications'])->name('applications.my');
 });
+// Admin-only routes
 
-Route::middleware(['auth', 'is_admin'])->group(function () {
-    Route::post('/jobs', [JobController::class, 'store'])->name('admin.jobs.store');
-});
+
+
+
+
 
 
 // Profile management (for all authenticated users)
@@ -51,10 +71,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::middleware(['auth', IsAdmin::class])->group(function () {
-    Route::get('/jobs/create', [JobController::class, 'create'])->name('admin.jobs.create');
-    Route::post('/jobs', [JobController::class, 'store'])->name('admin.jobs.store');
-});
+//edit posted job
+Route::get('/admin/jobs/{job}/edit', [JobController::class, 'edit'])->name('admin.jobs.edit');
+
+
 
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

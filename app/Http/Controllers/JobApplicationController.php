@@ -23,14 +23,13 @@ public function store(Request $request, $jobId)
         'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
     ]);
 
-    // Save the application to database (assuming you have an Application model)
-    $application = new \App\Models\Application();
+    $application = new JobApplication();
     $application->job_id = $jobId;
+    $application->user_id = auth()->id();  // <== ADD THIS LINE
     $application->name = $request->name;
     $application->email = $request->email;
     $application->cover_letter = $request->cover_letter;
 
-    // Store uploaded resume
     if ($request->hasFile('resume')) {
         $application->resume_path = $request->file('resume')->store('resumes', 'public');
     }
@@ -39,6 +38,8 @@ public function store(Request $request, $jobId)
 
     return redirect()->route('jobs.index')->with('success', 'Application submitted successfully!');
 }
+
+
 
     public function myApplications()
     {

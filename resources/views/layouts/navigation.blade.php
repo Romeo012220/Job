@@ -17,9 +17,19 @@
             {{ __('Admin Dashboard') }}
         </x-nav-link>
 
-        <x-nav-link :href="route('admin.jobs.create')" :active="request()->routeIs('admin.jobs.create')">
-            {{ __('Post a Job') }}
-        </x-nav-link>
+        <x-nav-link :href="route('admin.job-applications.index')" :active="request()->routeIs('admin.job-applications.index')">
+    {{ __('Job Applications') }}
+</x-nav-link>
+
+
+       <x-nav-link :href="route('admin.jobs.create')" :active="request()->routeIs('admin.jobs.create')">
+    {{ __('Post a Job') }}
+</x-nav-link>
+
+
+        <x-nav-link :href="route('admin.jobs.index')" :active="request()->routeIs('admin.jobs.index')">
+    {{ __('Posted Jobs') }}
+</x-nav-link>
     @elseif ($role === 'user')
         <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.index')">
             {{ __('Find Jobs') }}
