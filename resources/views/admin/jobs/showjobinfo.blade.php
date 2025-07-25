@@ -3,6 +3,14 @@
 @section('title', 'Job Details')
 
 @section('content')
+
+
+@if (session('success'))
+    <div id="successAlert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 max-w-3xl mx-auto text-center">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="min-h-screen bg-gray-100 py-10 px-4">
     <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8">
 
@@ -48,4 +56,20 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.getElementById('successAlert');
+        if (alert) {
+            setTimeout(() => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = 0;
+                setTimeout(() => alert.remove(), 500); // Optional: remove element after fade
+            }, 3000); // 3 seconds
+        }
+    });
+</script>
+@endpush
+
 @endsection

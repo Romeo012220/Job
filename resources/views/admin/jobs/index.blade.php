@@ -6,11 +6,12 @@
 <div class="container mx-auto p-4">
     <h2 class="text-2xl font-bold mb-4">Admin - All Job Posts</h2>
 
-    @if(session('success'))
-        <div class="bg-green-100 text-green-800 p-2 mb-4 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
+ @if(session('success'))
+    <div id="successAlert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4">
+        {{ session('success') }}
+    </div>
+@endif
+
 
     <table class="min-w-full bg-white shadow border">
         <thead>
@@ -47,3 +48,18 @@
     </div>
 </div>
 @endsection
+
+
+
+@push('scripts')
+<script>
+    setTimeout(() => {
+        const alert = document.getElementById('successAlert');
+        if (alert) {
+            alert.style.transition = 'opacity 0.5s ease-out';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500);
+        }
+    }, 3000); // Disappear after 3 seconds
+</script>
+@endpush

@@ -16,4 +16,11 @@ class Job extends Model
         'type',
         'salary',
     ];
+
+
+    public function questions()
+{
+    return $this->hasMany(JobQuestion::class);
+}
+
 }

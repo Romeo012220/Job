@@ -37,6 +37,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 });
 
+
+Route::get('/admin/applications/{id}', [App\Http\Controllers\JobApplicationController::class, 'show'])
+    ->name('admin.applications.show')
+    ->middleware(['auth', 'role:admin']);
+
 // User-only routes
 Route::middleware(['auth', 'role:user,admin'])->group(function () {
 
@@ -75,6 +80,7 @@ Route::get('/dashboard', function () {
 Route::get('/admin/jobs/{job}/edit', [JobController::class, 'edit'])->name('admin.jobs.edit');
 
 
+Route::get('/admin/applications', [JobApplicationController::class, 'index'])->name('admin.applications.index');
 
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

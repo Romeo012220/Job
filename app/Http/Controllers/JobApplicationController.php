@@ -41,6 +41,7 @@ public function store(Request $request, $jobId)
 
 
 
+
     public function myApplications()
     {
         $applications = JobApplication::with('job')
@@ -50,4 +51,20 @@ public function store(Request $request, $jobId)
 
         return view('user.dashboard', compact('applications'));
     }
+public function show($id)
+{
+    $application = JobApplication::with('job')->findOrFail($id);
+    return view('admin.job-applications.showapplicantinfo', compact('application'));
+}
+
+
+
+
+public function index()
+{
+    $applications = JobApplication::with('job')->latest()->paginate(10);
+
+    return view('admin.job-applications.index', compact('applications'));
+}
+
 }

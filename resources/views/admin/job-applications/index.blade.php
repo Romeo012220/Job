@@ -3,46 +3,57 @@
 @section('title', 'Job Applications')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-6 py-10 bg-white rounded-lg shadow-lg">
-    <h1 class="text-4xl font-extrabold mb-8 text-gray-900 tracking-tight">Job Applications</h1>
+<div class="max-w-6xl mx-auto px-6 py-10 bg-white rounded-lg shadow-md">
+    <h1 class="text-4xl font-bold mb-8 text-gray-800">Job Applications</h1>
 
     @if($applications->count())
-        <table class="min-w-full table-auto border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-gray-100 text-gray-700">
-                    <th class="border border-gray-300 px-4 py-2 text-left">Applicant Name</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Email</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Job Title</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Cover Letter</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Resume</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Applied At</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($applications as $application)
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-4 py-2">{{ $application->name }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $application->email }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $application->job->title ?? 'N/A' }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ Str::limit($application->cover_letter, 50) }}</td>
-                        <td class="border border-gray-300 px-4 py-2">
-                            @if($application->resume_path)
-                                <a href="{{ asset('storage/' . $application->resume_path) }}" target="_blank" class="text-blue-600 underline">View Resume</a>
-                            @else
-                                N/A
-                            @endif
-                        </td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $application->created_at->format('Y-m-d H:i') }}</td>
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto border border-gray-300 text-sm">
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="border px-4 py-2 text-left">Applicant Name</th>
+                        <th class="border px-4 py-2 text-left">Email</th>
+                        <th class="border px-4 py-2 text-left">Job Title</th>
+                        <th class="border px-4 py-2 text-left">Cover Letter</th>
+                        <th class="border px-4 py-2 text-left">Resume</th>
+                        <th class="border px-4 py-2 text-left">Applied At</th>
+                        <th class="border px-4 py-2 text-center">Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($applications as $application)
+                        <tr class="hover:bg-gray-50">
+                            <td class="border px-4 py-2">{{ $application->name }}</td>
+                            <td class="border px-4 py-2">{{ $application->email }}</td>
+                            <td class="border px-4 py-2">{{ $application->job->title ?? 'N/A' }}</td>
+                            <td class="border px-4 py-2">{{ Str::limit($application->cover_letter, 50) }}</td>
+                            <td class="border px-4 py-2">
+                                @if($application->resume_path)
+                                    <a href="{{ asset('storage/' . $application->resume_path) }}" target="_blank" class="text-blue-600 underline hover:text-blue-800">View</a>
+                                @else
+                                    <span class="text-gray-500 italic">N/A</span>
+                                @endif
+                            </td>
+                            <td class="border px-4 py-2">
+                                {{ $application->created_at->timezone('Asia/Manila')->format('Y-m-d h:i A') }}
+                            </td>
+                            <td class="border px-4 py-2 text-center">
+                                <a href="{{ route('admin.applications.show', $application->id) }}"
+                                   class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         <div class="mt-6">
             {{ $applications->links() }}
         </div>
     @else
-        <p class="text-gray-600 text-xl font-medium">No applications found.</p>
+        <p class="text-gray-600 text-lg font-medium">No applications found.</p>
     @endif
 </div>
 @endsection

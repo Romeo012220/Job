@@ -49,6 +49,8 @@
                 </button>
             </div>
 
+            
+
             @auth
     <div class="text-sm text-gray-600">Role: {{ auth()->user()->role }}</div>
 @endauth
