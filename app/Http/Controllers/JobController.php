@@ -27,13 +27,18 @@ public function index(Request $request)
 }
 
 
+public function edit($id)
+{
+    $job = Job::findOrFail($id);
+  return view('admin.jobs.editjobposted', compact('job'));
+
+}
 
 
 public function create()
 {
     return view('admin.jobs.create');
 }
-
 public function store(Request $request)
 {
     $request->validate([
@@ -52,7 +57,40 @@ public function store(Request $request)
         'salary' => $request->salary,
     ]);
 
+    // Role-based redirect
+    if (Auth::user()->role === 'admin') {
+        return redirect()->route('admin.jobs.index')->with('success', 'Job posted successfully!');
+    }
+
     return redirect()->route('jobs.index')->with('success', 'Job posted successfully!');
 }
+public function adminIndex()
+{
+    $jobs = Job::latest()->paginate(10); // You can use ->get() instead of paginate if you want
+    return view('admin.jobs.index', compact('jobs'));
+}
+
+
+public function show($id)
+{
+    $job = Job::findOrFail($id);
+    return view('admin.jobs.showjobinfo', compact('job'));
+}
+
+public function update(Request $request, $id)
+{
+    $job = Job::findOrFail($id);
+
+    $job->update([
+        'title' => $request->title,
+        'type' => $request->type,
+        'location' => $request->location,
+        'salary' => $request->salary,
+        'description' => $request->description,
+    ]);
+
+    return redirect()->route('admin.jobs.index')->with('success', 'Job updated successfully.');
+}
+
 
 }
