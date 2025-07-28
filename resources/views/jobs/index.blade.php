@@ -63,128 +63,85 @@
 </div>
 
 <!-- Modal -->
-<div
-    id="applyModal"
-    class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-6"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="applyModalTitle"
->
+ @foreach ($jobs as $job)
+    <!-- Modal per job -->
     <div
-        class="bg-white rounded-xl p-6 w-full max-w-lg relative shadow-2xl max-h-[550px] flex flex-col"
-        style="font-family: 'Roboto', sans-serif;"
+        id="applyModal-{{ $job->id }}"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-6"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="applyModalTitle-{{ $job->id }}"
     >
-        <h2
-            id="applyModalTitle"
-            class="text-3xl font-bold mb-6 text-gray-900"
-            style="font-family: 'Poppins', sans-serif;"
-        >
-            Apply for Job
-        </h2>
+        <div class="bg-white rounded-xl p-6 w-full max-w-lg relative shadow-2xl max-h-[550px] flex flex-col">
+            <h2 class="text-3xl font-bold mb-6 text-gray-900" id="applyModalTitle-{{ $job->id }}">
+                Apply for {{ $job->title }}
+            </h2>
 
-        <form
-            id="applyForm"
-            method="POST"
-            action=""
-            enctype="multipart/form-data"
-            class="space-y-6 overflow-y-auto"
-            style="flex-grow: 1;"
-        >
-            @csrf
-            <div>
-                <label for="name" class="block text-gray-800 font-semibold mb-2 text-lg">Name <span class="text-red-500">*</span></label>
-                <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-3 focus:ring-blue-500"
-                    required
-                    autocomplete="name"
-                >
-            </div>
+            <form method="POST" action="{{ route('jobs.apply', $job->id) }}" enctype="multipart/form-data" class="space-y-6 overflow-y-auto" style="flex-grow: 1;">
+                @csrf
+<input type="hidden" name="job_id" value="{{ $job->id }}">
+                <div>
+                    <label class="block font-semibold text-gray-800 mb-2">Name <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required class="w-full border rounded px-3 py-2" />
+                </div>
 
-            <div>
-                <label for="email" class="block text-gray-800 font-semibold mb-2 text-lg">Email <span class="text-red-500">*</span></label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-3 focus:ring-blue-500"
-                    required
-                    autocomplete="email"
-                >
-            </div>
+                <div>
+                    <label class="block font-semibold text-gray-800 mb-2">Email <span class="text-red-500">*</span></label>
+                    <input type="email" name="email" required class="w-full border rounded px-3 py-2" />
+                </div>
 
-            <div>
-                <label for="cover_letter" class="block text-gray-800 font-semibold mb-2 text-lg">Cover Letter</label>
-                <textarea
-                    id="cover_letter"
-                    name="cover_letter"
-                    rows="6"
-                    class="w-full border border-gray-300 rounded-lg px-2 py-1 text-lg focus:outline-none focus:ring-3 focus:ring-blue-500 resize-none"
-                    placeholder="Write your cover letter here..."
-                ></textarea>
-            </div>
+                <div>
+                    <label class="block font-semibold text-gray-800 mb-2">Cover Letter</label>
+                    <textarea name="cover_letter" rows="5" class="w-full border rounded px-3 py-2"></textarea>
+                </div>
 
-            <div>
-                <label for="resume" class="block text-gray-800 font-semibold mb-2 text-lg">
-                    Upload Resume (PDF, DOC, DOCX) <span class="text-red-500">*</span>
-                </label>
-                <input
-                    id="resume"
-                    type="file"
-                    name="resume"
-                    accept=".pdf,.doc,.docx"
-                    class="w-full"
-                    required
-                >
-            </div>
+                <div>
+                    <label class="block font-semibold text-gray-800 mb-2">Upload Resume <span class="text-red-500">*</span></label>
+                    <input type="file" name="resume" accept=".pdf,.doc,.docx" required class="w-full" />
+                </div>
 
-            <div class="flex justify-end space-x-5 mt-4">
-                <button
-                    type="button"
-                    onclick="closeModal()"
-                    class="px-8 py-3 rounded-lg bg-gray-300 text-gray-700 hover:bg-gray-400 focus:outline-none focus:ring-3 focus:ring-gray-500"
-                >
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    class="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-3 focus:ring-blue-500 font-semibold tracking-wide"
-                >
-                    Submit Application
-                </button>
-            </div>
-        </form>
+                <!-- Questions -->
+                @if($job->questionGroup && $job->questionGroup->questions->count())
+                    <div class="mt-4">
+                        <h3 class="font-semibold text-lg mb-2">Additional Questions</h3>
+                        @foreach($job->questionGroup->questions as $question)
+                            <div class="mb-3">
+                             <label class="block text-gray-700 mb-1">{{ $question->question }}</label>
 
-        <button
-            onclick="closeModal()"
-            class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 text-4xl font-bold"
-            aria-label="Close modal"
-        >
-            &times;
-        </button>
+                                <input type="text" name="answers[{{ $question->id }}]" class="w-full border px-3 py-2 rounded" required />
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" onclick="closeModal({{ $job->id }})" class="px-5 py-2 bg-gray-300 rounded">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded">Submit</button>
+                </div>
+            </form>
+
+            <button onclick="closeModal({{ $job->id }})" class="absolute top-3 right-4 text-3xl font-bold text-gray-400 hover:text-gray-600">&times;</button>
+        </div>
     </div>
-</div>
-
-
+@endforeach
 <script>
     function openModal(jobId) {
-        const modal = document.getElementById('applyModal');
-        const form = document.getElementById('applyForm');
-        form.action = `/jobs/${jobId}/apply`;
-
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        document.body.style.overflow = 'hidden';
+        const modal = document.getElementById(`applyModal-${jobId}`);
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
     }
 
-    function closeModal() {
-        const modal = document.getElementById('applyModal');
-        modal.classList.remove('flex');
-        modal.classList.add('hidden');
-        document.getElementById('applyForm').reset();
-        document.body.style.overflow = '';
+    function closeModal(jobId) {
+        const modal = document.getElementById(`applyModal-${jobId}`);
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
     }
 </script>
+
 @endsection

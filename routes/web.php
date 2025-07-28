@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobApplicationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\QuestionGroupController;
 use App\Http\Middleware\IsAdmin;
 // Redirect root to login
 Route::get('/', function () {
@@ -82,5 +83,25 @@ Route::get('/admin/jobs/{job}/edit', [JobController::class, 'edit'])->name('admi
 
 Route::get('/admin/applications', [JobApplicationController::class, 'index'])->name('admin.applications.index');
 
+
+
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('questions', [QuestionGroupController::class, 'index'])->name('admin.questions.index');
+    Route::get('questions/create', [QuestionGroupController::class, 'create'])->name('admin.questions.create');
+    Route::post('questions', [QuestionGroupController::class, 'store'])->name('admin.questions.store');
+    Route::get('questions/{id}', [QuestionGroupController::class, 'show'])->name('admin.questions.show');
+    Route::delete('questions/{id}', [QuestionGroupController::class, 'destroy'])->name('admin.questions.destroy');
+});
+
+
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('questions', QuestionGroupController::class)->names([
+        'index' => 'admin.questions.index',
+        'create' => 'admin.questions.create',
+        'store' => 'admin.questions.store',
+        'show' => 'admin.questions.show',
+        'destroy' => 'admin.questions.destroy',
+    ]);
+});
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

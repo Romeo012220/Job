@@ -15,6 +15,7 @@ class Job extends Model
         'location',
         'type',
         'salary',
+        'question_group_id', // Add this line
     ];
 
 
@@ -22,5 +23,12 @@ class Job extends Model
 {
     return $this->hasMany(JobQuestion::class);
 }
+public function questionGroup()
+{
+    return $this->belongsTo(QuestionGroup::class, 'question_group_id');
+}
+
+
+
 
 }

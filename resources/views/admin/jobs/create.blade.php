@@ -49,6 +49,17 @@
                 </button>
             </div>
 
+     <div class="mb-4">
+    <label for="question_group_id" class="block font-medium text-gray-700">Attach Question Group (optional)</label>
+    <select name="question_group_id" id="question_group_id" class="form-select mt-1 block w-full">
+        <option value="">-- None --</option>
+        @foreach($questionGroups as $group)
+            <option value="{{ $group->id }}">{{ $group->name }}</option>
+        @endforeach
+    </select>
+</div>
+
+
             
 
             @auth

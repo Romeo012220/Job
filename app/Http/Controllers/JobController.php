@@ -7,24 +7,26 @@ use App\Models\Job;
 use Illuminate\Support\Facades\Auth;
 use App\Models\JobApplication;
 use Illuminate\Support\Facades\Storage;
+use App\Models\QuestionGroup;
 
 class JobController extends Controller
 {
-    
-public function index(Request $request)
+    public function index(Request $request)
 {
     $search = $request->input('search');
 
-    $jobs = Job::when($search, function ($query, $search) {
-                return $query->where('title', 'like', "%{$search}%")
-                             ->orWhere('description', 'like', "%{$search}%")
-                             ->orWhere('location', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->get();
+    $jobs = Job::with('questionGroup.questions') // Eager load questions
+        ->when($search, function ($query, $search) {
+            return $query->where('title', 'like', "%{$search}%")
+                         ->orWhere('description', 'like', "%{$search}%")
+                         ->orWhere('location', 'like', "%{$search}%");
+        })
+        ->latest()
+        ->get();
 
     return view('jobs.index', compact('jobs', 'search'));
 }
+
 
 
 public function edit($id)
@@ -37,25 +39,29 @@ public function edit($id)
 
 public function create()
 {
-    return view('admin.jobs.create');
+    $questionGroups = QuestionGroup::all();
+    return view('admin.jobs.create', compact('questionGroups'));
 }
 public function store(Request $request)
 {
     $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'location' => 'required|string|max:255',
-        'type' => 'required|string|max:100',
-        'salary' => 'nullable|numeric',
-    ]);
+    'title' => 'required|string|max:255',
+    'description' => 'required|string',
+    'location' => 'required|string|max:255',
+    'type' => 'required|string|max:100',
+    'salary' => 'nullable|numeric',
+    'question_group_id' => 'nullable|exists:question_groups,id',
+]);
 
-    Job::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'location' => $request->location,
-        'type' => $request->type,
-        'salary' => $request->salary,
-    ]);
+Job::create([
+    'title' => $request->title,
+    'description' => $request->description,
+    'location' => $request->location,
+    'type' => $request->type,
+    'salary' => $request->salary,
+    'question_group_id' => $request->question_group_id,
+]);
+
 
     // Role-based redirect
     if (Auth::user()->role === 'admin') {
@@ -71,11 +77,14 @@ public function adminIndex()
 }
 
 
+// JobController.php
 public function show($id)
 {
-    $job = Job::findOrFail($id);
+    $job = Job::with('questionGroup.questions')->findOrFail($id);
     return view('admin.jobs.showjobinfo', compact('job'));
 }
+
+
 
 public function update(Request $request, $id)
 {

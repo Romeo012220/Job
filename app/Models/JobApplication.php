@@ -26,4 +26,11 @@ protected $fillable = [
     {
         return $this->belongsTo(Job::class);
     }
+    // App\Models\JobApplication.php
+public function answers()
+{
+    return $this->hasMany(JobAnswer::class);
+}
+
+
 }

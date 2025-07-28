@@ -30,6 +30,10 @@
         <x-nav-link :href="route('admin.jobs.index')" :active="request()->routeIs('admin.jobs.index')">
     {{ __('Posted Jobs') }}
 </x-nav-link>
+
+<x-nav-link :href="route('admin.questions.index')" :active="request()->routeIs('admin.questions.*')">
+    {{ __('Manage Questions') }}
+</x-nav-link>
     @elseif ($role === 'user')
         <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.index')">
             {{ __('Find Jobs') }}
