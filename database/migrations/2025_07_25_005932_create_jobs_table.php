@@ -17,7 +17,7 @@ public function up(): void
         $table->text('description');
         $table->string('location');
         $table->string('type');
-        $table->decimal('salary', 10, 2)->nullable();
+       
         $table->timestamps();
     });
 }

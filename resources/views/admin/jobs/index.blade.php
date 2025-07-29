@@ -30,10 +30,19 @@
                     <td class="py-2 px-4 border-b">{{ $job->type }}</td>
                     <td class="py-2 px-4 border-b">{{ $job->location }}</td>
                     <td class="py-2 px-4 border-b">₱{{ number_format($job->salary, 2) }}</td>
-                    <td class="py-2 px-4 border-b">
-                        <!-- Add edit/delete links later if needed -->
-<a href="{{ route('jobs.show', $job->id) }}" class="text-blue-600 hover:underline">View</a>
-                    </td>
+                    <td class="py-2 px-4 border-b flex space-x-2">
+    <a href="{{ route('jobs.show', $job->id) }}" class="text-blue-600 hover:underline">View</a>
+
+    @if($job->status === 'open')
+        <form action="{{ route('admin.jobs.close', $job->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to close this job?');">
+            @csrf
+            <button type="submit" class="text-red-600 hover:underline">Close</button>
+        </form>
+    @else
+        <span class="text-gray-500 italic">Closed</span>
+    @endif
+</td>
+
                 </tr>
             @empty
                 <tr>

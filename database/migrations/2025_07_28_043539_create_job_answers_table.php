@@ -9,25 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-// database/migrations/xxxx_xx_xx_create_job_answers_table.php
-public function up()
+ public function up()
 {
-    Schema::create('job_answers', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('job_application_id')->constrained()->onDelete('cascade');
-        $table->foreignId('job_question_id')->constrained()->onDelete('cascade');
-        $table->text('answer');
-        $table->timestamps();
-    });
+    if (!Schema::hasTable('job_answers')) {
+        Schema::create('job_answers', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('job_application_id');
+            $table->unsignedBigInteger('job_question_id');
+            $table->text('answer');
+            $table->timestamps();
+        });
+    }
 }
-
-
-
-
-
-
-
-
 
     /**
      * Reverse the migrations.

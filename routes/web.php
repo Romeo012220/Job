@@ -11,8 +11,43 @@ use App\Http\Controllers\Admin\QuestionController;
 // Redirect root to login
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/question-groups/{id}', [QuestionGroupController::class, 'show'])->name('question-groups.show');
-    Route::resource('questions', QuestionController::class);
+//Route::resource('questions', QuestionController::class);
+ //   Route::resource('questions', QuestionController::class);
+    //Route::resource('questions', App\Http\Controllers\QuestionController::class);
+
+    // Route::get('questions/{group}/add', [QuestionController::class, 'addQuestion'])->name('questions.add');
+  //  Route::post('questions/{group}/add', [QuestionController::class, 'storeQuestion'])->name('questions.storeQuestion');
+
+    // Group question updates/deletes (custom, if not handled in QuestionController)
+    Route::put('questions/{id}/update-question', [QuestionGroupController::class, 'updateQuestion'])->name('questions.updatequestion');
+  //  Route::delete('questions/{id}/delete', [QuestionGroupController::class, 'deleteQuestion'])->name('questions.delete');
+
+
+
+  // Route to view all question groups
+   // Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
+
+    // Route to show individual question group and its questions
+   // Route::get('/questions/group/{id}', [QuestionController::class, 'viewGroup'])->name('question-groups.show');
+
+    // Create question form
+   // Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+
+    // Store question (you may still need to implement logic here)
+    //Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
+
+    // Edit question form
+   // Route::get('/questions/{id}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
+
+    // Update question
+   // Route::put('/questions/{id}', [QuestionController::class, 'update'])->name('questions.update');
+
+    // Delete question
+  //  Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+
+    // Store new group
+    Route::post('/question-groups', [QuestionController::class, 'storeGroup'])->name('question-groups.store');
+
 });
 
 Route::get('/', function () {
@@ -42,7 +77,7 @@ Route::put('/admin/jobs/{job}', [JobController::class, 'update'])->name('admin.j
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
-    Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
+     Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 });
 
 
@@ -68,7 +103,7 @@ Route::middleware(['auth', 'role:user,admin'])->group(function () {
 
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('questions', \App\Http\Controllers\QuestionGroupController::class);
+   // Route::resource('questions', \App\Http\Controllers\QuestionGroupController::class);
 });
 
 
@@ -96,46 +131,61 @@ Route::get('/admin/applications', [JobApplicationController::class, 'index'])->n
 
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('questions', [QuestionGroupController::class, 'index'])->name('admin.questions.index');
-    Route::get('questions/create', [QuestionGroupController::class, 'create'])->name('admin.questions.create');
+   Route::get('questions', [QuestionGroupController::class, 'index'])->name('admin.questions.index');
+ Route::get('questions/create', [QuestionGroupController::class, 'create'])->name('admin.questions.create');
     Route::post('questions', [QuestionGroupController::class, 'store'])->name('admin.questions.store');
-    Route::get('questions/{id}', [QuestionGroupController::class, 'show'])->name('admin.questions.show');
+ //   Route::get('questions/{id}', [QuestionGroupController::class, 'show'])->name('admin.questions.show');
     Route::delete('questions/{id}', [QuestionGroupController::class, 'destroy'])->name('admin.questions.destroy');
 });
 
 
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('questions', QuestionGroupController::class)->names([
-        'index' => 'admin.questions.index',
-        'create' => 'admin.questions.create',
-        'store' => 'admin.questions.store',
-        'show' => 'admin.questions.show',
-        'destroy' => 'admin.questions.destroy',
-    ]);
-});
+//Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+  //  Route::resource('questions', QuestionGroupController::class)->names([
+    //    'index' => 'admin.questions.index',
+      //  'create' => 'admin.questions.create',
+        //'store' => 'admin.questions.store',
+        //'show' => 'admin.questions.show',
+        //'destroy' => 'admin.questions.destroy',
+    //]);
+//});
 
 Route::get('question-groups/{id}', [\App\Http\Controllers\Admin\QuestionGroupController::class, 'show'])->name('admin.question-groups.show');
 
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('questions', QuestionController::class);
+  //  Route::resource('questions', QuestionController::class);
+   //Route::resource('questions', QuestionController::class);
+    Route::get('question-groups/{group}', [QuestionController::class, 'viewGroup'])->name('question-groups.show');
+    
 });
+//Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
+  //Route::resource('questions', \App\Http\Controllers\Admin\QuestionController::class);
+    //Route::resource('question-groups', \App\Http\Controllers\Admin\QuestionGroupController::class);
+//});
+
+//Route::get('/admin/questions', [\App\Http\Controllers\Admin\QuestionGroupController::class, 'index'])->name('admin.questions.index');
+
+Route::get('/admin/questions/{question}/edit', [QuestionController::class, 'edit'])->name('admin.questions.edit');
 
 
-Route::get('/admin/questions/{group}/edit', [QuestionController::class, 'edit'])->name('admin.questions.edit');
-Route::put('/admin/questions/{group}', [QuestionController::class, 'update'])->name('admin.questions.update');
+//Route::put('/admin/questions/{question}', [QuestionController::class, 'update'])->name('admin.questions.update');
+
 
 Route::get('/admin/questions/{group}/add', [QuestionController::class, 'addQuestion'])->name('admin.questions.add');
 Route::post('/admin/questions/{group}/add', [QuestionController::class, 'storeQuestion'])->name('admin.questions.storeQuestion');
 
 
 // For updating an individual question
-Route::put('/admin/questions/{id}/update-question', [QuestionGroupController::class, 'updateQuestion'])->name('admin.questions.updatequestion');
+//Route::put('/admin/questions/{id}/update-question', [QuestionGroupController::class, 'updateQuestion'])->name('admin.questions.updatequestion');
 
 // For deleting an individual question
 Route::delete('/admin/questions/{id}/delete', [QuestionGroupController::class, 'deleteQuestion'])->name('admin.questions.delete');
 
 
+Route::post('/admin/jobs/{job}/close', [JobController::class, 'closeJob'])->name('admin.jobs.close');
+
+
+Route::get('/jobs/{id}/view', [JobController::class, 'viewJobPost'])->name('jobs.view');
 
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

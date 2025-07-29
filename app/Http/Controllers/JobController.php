@@ -94,11 +94,25 @@ public function update(Request $request, $id)
         'title' => $request->title,
         'type' => $request->type,
         'location' => $request->location,
-        'salary' => $request->salary,
+       
         'description' => $request->description,
     ]);
 
     return redirect()->route('admin.jobs.index')->with('success', 'Job updated successfully.');
+}
+
+public function closeJob(Job $job)
+{
+    $job->status = 'closed';
+    $job->save();
+
+    return redirect()->back()->with('success', 'Job has been closed successfully.');
+}
+
+public function viewJobPost($id)
+{
+    $job = Job::with('questionGroup.questions')->findOrFail($id);
+    return view('jobs.view', compact('job'));
 }
 
 

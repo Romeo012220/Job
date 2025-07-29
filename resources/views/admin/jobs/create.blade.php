@@ -38,9 +38,14 @@
                 <input type="text" name="type" class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" required>
             </div>
 
-            <div class="mb-6">
-                <label class="block font-semibold text-gray-700 mb-1">Salary</label>
-                <input type="number" name="salary" step="0.01" class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <div class="mb-4">
+                <label for="question_group_id" class="block font-medium text-gray-700">Attach Question Group (optional)</label>
+                <select name="question_group_id" id="question_group_id" class="form-select mt-1 block w-full">
+                    <option value="">-- None --</option>
+                    @foreach($questionGroups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="text-center">
@@ -49,22 +54,9 @@
                 </button>
             </div>
 
-     <div class="mb-4">
-    <label for="question_group_id" class="block font-medium text-gray-700">Attach Question Group (optional)</label>
-    <select name="question_group_id" id="question_group_id" class="form-select mt-1 block w-full">
-        <option value="">-- None --</option>
-        @foreach($questionGroups as $group)
-            <option value="{{ $group->id }}">{{ $group->name }}</option>
-        @endforeach
-    </select>
-</div>
-
-
-            
-
             @auth
-    <div class="text-sm text-gray-600">Role: {{ auth()->user()->role }}</div>
-@endauth
+                <div class="text-sm text-gray-600 mt-4">Role: {{ auth()->user()->role }}</div>
+            @endauth
 
         </form>
     </div>

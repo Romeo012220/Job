@@ -12,7 +12,7 @@ class Question extends Model
 
     protected $fillable = [
         'question_group_id',
-        'question_text',
+        'question_text','question'
     ];
 
     public function group()

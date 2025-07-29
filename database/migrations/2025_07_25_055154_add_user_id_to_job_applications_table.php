@@ -10,27 +10,39 @@ return new class extends Migration
      * Run the migrations.
      */public function up()
 {
-    Schema::table('job_applications', function (Blueprint $table) {
-        if (!Schema::hasColumn('job_applications', 'name')) {
+    Schema::table('applications', function (Blueprint $table) {
+
+        if (!Schema::hasColumn('applications', 'user_id')) {
+            $table->unsignedBigInteger('user_id')->nullable()->after('id');
+
+            // Add foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        }
+
+        if (!Schema::hasColumn('applications', 'name')) {
             $table->string('name')->after('user_id');
         }
-        if (!Schema::hasColumn('job_applications', 'email')) {
+        if (!Schema::hasColumn('applications', 'email')) {
             $table->string('email')->after('name');
         }
-        if (!Schema::hasColumn('job_applications', 'cover_letter')) {
+        if (!Schema::hasColumn('applications', 'cover_letter')) {
             $table->text('cover_letter')->nullable()->after('email');
         }
-        if (!Schema::hasColumn('job_applications', 'resume_path')) {
+        if (!Schema::hasColumn('applications', 'resume_path')) {
             $table->string('resume_path')->nullable()->after('cover_letter');
         }
     });
 }
 
+
+
 public function down()
 {
-    Schema::table('job_applications', function (Blueprint $table) {
-        $table->dropColumn(['name', 'email', 'cover_letter', 'resume_path']);
+    Schema::table('applications', function (Blueprint $table) {
+        $table->dropForeign(['user_id']);
+        $table->dropColumn(['user_id', 'name', 'email', 'cover_letter', 'resume_path']);
     });
 }
+
 
 };

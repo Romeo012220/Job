@@ -5,32 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Job;
+use App\Models\JobAnswer;
 
 class JobApplication extends Model
 {
     use HasFactory;
 
-protected $fillable = [
-    'job_id',
-    'user_id',          // <== ADD THIS
-    'name',
-    'email',
-    'cover_letter',
-    'resume_path',      // Make sure this matches the column name in DB
-];
+    protected $table = 'applications'; // <== ✅ Add this line
 
+    protected $fillable = [
+        'job_id',
+        'user_id',
+        'name',
+        'email',
+        'cover_letter',
+        'resume_path',
+    ];
 
-
-    // Add this relationship
     public function job()
     {
         return $this->belongsTo(Job::class);
     }
-    // App\Models\JobApplication.php
-public function answers()
-{
-    return $this->hasMany(JobAnswer::class);
-}
 
-
+    public function answers()
+    {
+        return $this->hasMany(JobAnswer::class);
+    }
 }
