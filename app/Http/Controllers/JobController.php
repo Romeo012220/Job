@@ -88,8 +88,19 @@ public function adminIndex()
 public function show($id)
 {
     $job = Job::with('questionGroup.questions')->findOrFail($id);
-    return view('admin.jobs.showjobinfo', compact('job'));
+
+    $alreadyApplied = false;
+    if (auth()->check()) {
+        $alreadyApplied = $job->applications()
+            ->where('user_id', auth()->id())
+            ->exists();
+    }
+
+    return view('jobs.show', compact('job', 'alreadyApplied'));
 }
+
+
+
 
 
 
@@ -123,8 +134,19 @@ public function closeJob(Job $job)
 public function viewJobPost($id)
 {
     $job = Job::with('questionGroup.questions')->findOrFail($id);
-    return view('jobs.view', compact('job'));
+
+    $alreadyApplied = false;
+
+    if (Auth::check()) {
+        $alreadyApplied = JobApplication::where('job_id', $job->id)
+                                        ->where('user_id', Auth::id())
+                                        ->exists();
+    }
+
+    return view('jobs.view', compact('job', 'alreadyApplied'));
 }
+
+
 
 
 }

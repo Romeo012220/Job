@@ -73,17 +73,34 @@
                     View Job
                 </a>
 
-                @if($job->status === 'open')
-                    <button onclick="openModal({{ $job->id }})"
-                            class="w-28 text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition text-center"
-                            title="Apply to this job">
-                        Apply
-                    </button>
-                @else
-                    <span class="w-28 text-sm px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded-md text-center cursor-not-allowed" title="This job is closed">
-                        Closed
-                    </span>
-                @endif
+
+
+@php
+    $alreadyApplied = $job->applications->contains('user_id', Auth::id());
+@endphp
+
+@if($job->status === 'open')
+    @if($alreadyApplied)
+        <span class="w-28 text-sm px-4 py-2 bg-green-100 text-green-800 font-semibold rounded-md text-center">
+            ✅ Already Applied
+        </span>
+    @else
+        <button onclick="openModal({{ $job->id }})"
+            class="w-28 text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition text-center"
+            title="Apply to this job">
+            Apply
+        </button>
+    @endif
+@else
+    <span class="w-28 text-sm px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded-md text-center cursor-not-allowed" title="This job is closed">
+        Closed
+    </span>
+@endif
+
+
+
+
+
             </div>
         </div>
     @empty
@@ -120,43 +137,58 @@
             <hr class="my-4">
         </div>
 
-        <form method="POST" action="{{ route('jobs.apply', $job->id) }}" class="space-y-6">
-            @csrf
-            <input type="hidden" name="job_id" value="{{ $job->id }}">
 
-            <div>
-                <label class="block font-semibold text-gray-800 mb-2">Name <span class="text-red-500">*</span></label>
-                <input type="text" name="name" required class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800" />
+        @if(!$job->applications->contains('user_id', Auth::id()))
+    <form method="POST" action="{{ route('jobs.apply', $job->id) }}" class="space-y-6">
+        @csrf
+        <input type="hidden" name="job_id" value="{{ $job->id }}">
+
+        <!-- Name -->
+        <div>
+            <label class="block font-semibold text-gray-800 mb-2">Name <span class="text-red-500">*</span></label>
+            <input type="text" name="name" value="{{ Auth::user()->name }}" readonly required class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-100 text-gray-800" />
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label class="block font-semibold text-gray-800 mb-2">Email <span class="text-red-500">*</span></label>
+            <input type="email" name="email" value="{{ Auth::user()->email }}" readonly required class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-100 text-gray-800" />
+        </div>
+
+        <!-- Cover Letter -->
+        <div>
+            <label class="block font-semibold text-gray-800 mb-2">Cover Letter</label>
+            <textarea name="cover_letter" rows="5" class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800 resize-none"></textarea>
+        </div>
+
+        <!-- Additional Questions -->
+        @if($job->questionGroup && $job->questionGroup->questions->count())
+            <div class="mt-4">
+                <h3 class="font-semibold text-lg mb-2">Additional Questions</h3>
+                @foreach($job->questionGroup->questions as $question)
+                    <div class="mb-3">
+                        <label class="block text-gray-700 mb-1">{{ $question->question }}</label>
+                        <input type="text" name="answers[{{ $question->id }}]" class="w-full border px-3 py-2 rounded focus:ring-blue-500 focus:border-blue-500" required />
+                    </div>
+                @endforeach
             </div>
+        @endif
 
-            <div>
-                <label class="block font-semibold text-gray-800 mb-2">Email <span class="text-red-500">*</span></label>
-                <input type="email" name="email" required class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800" />
-            </div>
-
-            <div>
-                <label class="block font-semibold text-gray-800 mb-2">Cover Letter</label>
-                <textarea name="cover_letter" rows="5" class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800 resize-none"></textarea>
-            </div>
-
-            @if($job->questionGroup && $job->questionGroup->questions->count())
-                <div class="mt-4">
-                    <h3 class="font-semibold text-lg mb-2">Additional Questions</h3>
-                    @foreach($job->questionGroup->questions as $question)
-                        <div class="mb-3">
-                            <label class="block text-gray-700 mb-1">{{ $question->question }}</label>
-                            <input type="text" name="answers[{{ $question->id }}]" class="w-full border px-3 py-2 rounded focus:ring-blue-500 focus:border-blue-500" required />
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
-            <div class="flex justify-end gap-4 mt-6">
-                <button type="button" onclick="closeModal({{ $job->id }})" class="px-5 py-2 bg-gray-300 rounded hover:bg-gray-400 transition font-semibold">Cancel</button>
-                <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-semibold shadow-sm">Submit</button>
-            </div>
-        </form>
+        <!-- Buttons -->
+        <div class="flex justify-end gap-4 mt-6">
+            <button type="button" onclick="closeModal({{ $job->id }})" class="px-5 py-2 bg-gray-300 rounded hover:bg-gray-400 transition font-semibold">Cancel</button>
+            <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-semibold shadow-sm">Submit</button>
+        </div>
+    </form>
+@else
+    <div class="text-center text-red-600 text-lg font-semibold mt-6">
+        You have already applied for this job. ✅
     </div>
+    <div class="flex justify-end mt-6">
+        <button type="button" onclick="closeModal({{ $job->id }})" class="px-5 py-2 bg-gray-300 rounded hover:bg-gray-400 transition font-semibold">Close</button>
+    </div>
+@endif
+</div> 
 </div>
 @endforeach
 

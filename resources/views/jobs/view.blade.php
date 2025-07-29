@@ -59,18 +59,24 @@
     @endif
 
     <!-- Apply Button or Closed Message -->
-    <div class="text-center pt-4">
-        @if($job->status === 'closed')
-            <p class="text-lg font-semibold text-red-600">
-                ❌ This job is already closed. Applications are no longer accepted.
-            </p>
-        @else
-            <a href="{{ route('jobs.apply', $job->id) }}"
-               class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 px-8 rounded-xl transition duration-300">
-                🚀 Apply Now
-            </a>
-        @endif
-    </div>
+     <!-- Apply Button or Closed Message -->
+<div class="text-center pt-4">
+    @if($job->status === 'closed')
+        <p class="text-lg font-semibold text-red-600">
+            ❌ This job is already closed. Applications are no longer accepted.
+        </p>
+    @elseif($alreadyApplied)
+        <p class="text-lg font-semibold text-gray-600">
+            ✅ You have already applied for this job.
+        </p>
+    @else
+        <a href="{{ route('jobs.apply', $job->id) }}"
+           class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 px-8 rounded-xl transition duration-300">
+            🚀 Apply Now
+        </a>
+    @endif
+</div>
+
 
 </div>
 @endsection

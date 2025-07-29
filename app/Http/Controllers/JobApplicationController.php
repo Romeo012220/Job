@@ -11,11 +11,17 @@ use App\Models\JobQuestion;
 
 class JobApplicationController extends Controller
 {
-    public function showApplyForm($id)
-    {
-        $job = Job::with('questionGroup.questions')->findOrFail($id);
-        return view('jobs.apply', compact('job'));
-    }
+  public function showApplyForm($id)
+{
+    $job = Job::with('questionGroup.questions')->findOrFail($id);
+
+    $alreadyApplied = JobApplication::where('job_id', $id)
+        ->where('user_id', auth()->id())
+        ->exists();
+
+    return view('jobs.apply', compact('job', 'alreadyApplied'));
+}
+
 
     public function store(Request $request)
     {
