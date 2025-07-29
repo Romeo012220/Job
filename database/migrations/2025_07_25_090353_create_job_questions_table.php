@@ -17,6 +17,9 @@ Schema::create('job_questions', function (Blueprint $table) {
     $table->unsignedBigInteger('job_id');
     $table->text('question');
     $table->timestamps();
+$table->string('education')->nullable();
+$table->string('job_type')->nullable();
+$table->text('qualifications')->nullable();
 
     $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
 });

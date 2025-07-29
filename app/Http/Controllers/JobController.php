@@ -31,10 +31,11 @@ class JobController extends Controller
 
 public function edit($id)
 {
-    $job = Job::findOrFail($id);
-  return view('admin.jobs.editjobposted', compact('job'));
-
+    $job = Job::with('questionGroup')->findOrFail($id);
+    $questionGroups = \App\Models\QuestionGroup::all(); // also pass all groups for the dropdown
+    return view('admin.jobs.editjobposted', compact('job', 'questionGroups'));
 }
+
 
 
 public function create()
@@ -44,23 +45,29 @@ public function create()
 }
 public function store(Request $request)
 {
-    $request->validate([
+$request->validate([
     'title' => 'required|string|max:255',
     'description' => 'required|string',
     'location' => 'required|string|max:255',
-    'type' => 'required|string|max:100',
-    'salary' => 'nullable|numeric',
     'question_group_id' => 'nullable|exists:question_groups,id',
+    'education' => 'required',
+    'job_type' => 'required|string|max:100', // ✅ use this instead
+    'qualifications' => 'nullable',
 ]);
+
 
 Job::create([
     'title' => $request->title,
     'description' => $request->description,
     'location' => $request->location,
-    'type' => $request->type,
-    'salary' => $request->salary,
+    'type' => $request->job_type, // fixed
     'question_group_id' => $request->question_group_id,
+    'education' => $request->education,
+    'job_type' => $request->job_type,
+    'qualifications' => $request->qualifications,
+      'category' => $request->category, // 👈 add this
 ]);
+
 
 
     // Role-based redirect
@@ -94,8 +101,12 @@ public function update(Request $request, $id)
         'title' => $request->title,
         'type' => $request->type,
         'location' => $request->location,
-       
         'description' => $request->description,
+         'education' => $request->education,
+    'job_type' => $request->job_type,
+    'qualifications' => $request->qualifications,
+     'category' => $request->category, // 👈 add this
+
     ]);
 
     return redirect()->route('admin.jobs.index')->with('success', 'Job updated successfully.');

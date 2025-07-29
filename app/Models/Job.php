@@ -14,8 +14,11 @@ class Job extends Model
         'description',
         'location',
         'type',
-        'salary',
         'question_group_id', // Add this line
+        'education',
+    'job_type',
+    'qualifications',
+      'category', // instead of 'category'
     ];
 
 
@@ -28,6 +31,12 @@ public function questionGroup()
     return $this->belongsTo(QuestionGroup::class, 'question_group_id');
 }
 
+
+// Job.php model
+public function category()
+{
+    return $this->belongsTo(Category::class);
+}
 
 
 
