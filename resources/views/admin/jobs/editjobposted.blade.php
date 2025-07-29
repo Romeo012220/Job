@@ -20,17 +20,23 @@
         </div>
 
         <!-- Job Category (Type) -->
-        <div class="mt-4">
-            <label class="block text-gray-700 font-medium mb-1">Job Category</label>
-            <select name="type" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="">-- Select Category --</option>
-                <option value="IT" {{ old('type', $job->type) == 'IT' ? 'selected' : '' }}>IT</option>
-                <option value="Sales" {{ old('type', $job->type) == 'Sales' ? 'selected' : '' }}>Sales</option>
-                <option value="Finance" {{ old('type', $job->type) == 'Finance' ? 'selected' : '' }}>Finance</option>
-                <option value="HR" {{ old('type', $job->type) == 'HR' ? 'selected' : '' }}>HR</option>
-                <option value="Others" {{ old('type', $job->type) == 'Others' ? 'selected' : '' }}>Others</option>
-            </select>
-        </div>
+     <!-- Job Category -->
+<!-- Job Type (or Category?) -->
+<!-- Job Category -->
+<div class="mt-4">
+    <label class="block text-gray-700 font-medium mb-1">Job Category</label>
+    <select name="category" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="">-- Select Category --</option>
+        <option value="IT" {{ old('category', $job->category) == 'IT' ? 'selected' : '' }}>IT</option>
+        <option value="Sales" {{ old('category', $job->category) == 'Sales' ? 'selected' : '' }}>Sales</option>
+        <option value="Finance" {{ old('category', $job->category) == 'Finance' ? 'selected' : '' }}>Finance</option>
+        <option value="HR" {{ old('category', $job->category) == 'HR' ? 'selected' : '' }}>HR</option>
+        <option value="Others" {{ old('category', $job->category) == 'Others' ? 'selected' : '' }}>Others</option>
+    </select>
+</div>
+
+
+
 
         <!-- Education -->
         <div class="mt-4">
@@ -46,11 +52,11 @@
         <!-- Job Type -->
         <div class="mt-4">
             <label class="block text-gray-700 font-medium mb-1">Job Type</label>
-            <select name="job_type" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="">-- Select Job Type --</option>
-                <option value="Full-Time" {{ old('job_type', $job->job_type) == 'Full-Time' ? 'selected' : '' }}>Full-Time</option>
-                <option value="Part-Time" {{ old('job_type', $job->job_type) == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
-            </select>
+           <select name="type" class="...">
+    <option value="full_time" {{ old('type', $job->type) == 'full_time' ? 'selected' : '' }}>Full-Time</option>
+    <option value="part_time" {{ old('type', $job->type) == 'part_time' ? 'selected' : '' }}>Part-Time</option>
+</select>
+
         </div>
 
         <!-- Qualifications -->
