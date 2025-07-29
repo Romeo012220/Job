@@ -187,5 +187,11 @@ Route::post('/admin/jobs/{job}/close', [JobController::class, 'closeJob'])->name
 
 Route::get('/jobs/{id}/view', [JobController::class, 'viewJobPost'])->name('jobs.view');
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-applications/{application}', [JobApplicationController::class, 'showUserApplication'])
+        ->name('applications.show');
+});
+
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

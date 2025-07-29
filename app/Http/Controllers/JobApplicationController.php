@@ -83,4 +83,29 @@ class JobApplicationController extends Controller
 
         return view('admin.job-applications.index', compact('applications'));
     }
+
+    public function showUserApplicationInfo($id)
+{
+    $application = JobApplication::with(['job', 'answers.question'])
+        ->where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
+
+    return view('applications.showuserapplicationinfo', compact('application'));
+}
+
+public function showUserApplication(JobApplication $application)
+{
+    // Ensure the logged-in user owns this application
+    if (auth()->id() !== $application->user_id) {
+        abort(403);
+    }
+
+    return view('applications.showuserapplicationinfo', [
+        'application' => $application
+    ]);
+}
+
+
+
 }

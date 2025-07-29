@@ -37,19 +37,6 @@
                 {{ $application->cover_letter }}
             </div>
         </div>
-
-        {{-- Resume --}}
-        <div>
-            <p class="text-sm text-gray-500 font-medium uppercase">Resume</p>
-            @if ($application->resume_path)
-                <a href="{{ asset('storage/' . $application->resume_path) }}" target="_blank"
-                   class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition uppercase">
-                    📄 View Resume
-                </a>
-            @else
-                <span class="text-gray-500 italic uppercase">No Resume Provided</span>
-            @endif
-        </div>
     </div>
 
     {{-- Answers to Questions --}}

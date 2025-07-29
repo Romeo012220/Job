@@ -15,7 +15,6 @@
                         <th class="border px-4 py-2 text-left">Email</th>
                         <th class="border px-4 py-2 text-left">Job Title</th>
                         <th class="border px-4 py-2 text-left">Cover Letter</th>
-                        <th class="border px-4 py-2 text-left">Resume</th>
                         <th class="border px-4 py-2 text-left">Applied At</th>
                         <th class="border px-4 py-2 text-center">Action</th>
                     </tr>
@@ -27,13 +26,6 @@
                             <td class="border px-4 py-2">{{ $application->email }}</td>
                             <td class="border px-4 py-2">{{ $application->job->title ?? 'N/A' }}</td>
                             <td class="border px-4 py-2">{{ Str::limit($application->cover_letter, 50) }}</td>
-                            <td class="border px-4 py-2">
-                                @if($application->resume_path)
-                                    <a href="{{ asset('storage/' . $application->resume_path) }}" target="_blank" class="text-blue-600 underline hover:text-blue-800">View</a>
-                                @else
-                                    <span class="text-gray-500 italic">N/A</span>
-                                @endif
-                            </td>
                             <td class="border px-4 py-2">
                                 {{ $application->created_at->timezone('Asia/Manila')->format('Y-m-d h:i A') }}
                             </td>
