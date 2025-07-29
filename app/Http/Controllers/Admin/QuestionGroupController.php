@@ -8,6 +8,7 @@ use App\Models\QuestionGroup;
 use App\Models\JobQuestion;
 
 
+
 class QuestionGroupController extends Controller
 {
     public function index()
@@ -48,6 +49,31 @@ class QuestionGroupController extends Controller
         return redirect()->route('admin.questions.index')->with('success', 'Question group and questions added successfully.');
     }
 
+public function updateQuestion(Request $request, $id)
+{
+    $request->validate([
+        'text' => 'required|string|max:1000',
+    ]);
+
+    $question = JobQuestion::findOrFail($id);
+    $question->text = $request->text;
+    $question->save();
+
+    return back()->with('success', 'Question updated successfully.');
+}
+
+public function deleteQuestion($id)
+{
+    $question = JobQuestion::findOrFail($id);
+    $question->delete();
+
+    return back()->with('success', 'Question deleted successfully.');
+}
+
+
+
+
+
     public function destroy($id)
     {
         $group = QuestionGroup::findOrFail($id);
@@ -59,6 +85,17 @@ class QuestionGroupController extends Controller
 {
     $group = QuestionGroup::with('questions')->findOrFail($id);
     return view('admin.questions.showgroup', compact('group'));
+}
+public function edit($id)
+{
+    $group = QuestionGroup::with('questions')->findOrFail($id); // eager load questions
+return view('admin.questions.editgroupquestion', compact('group'));
+
+}
+public function editQuestion($id)
+{
+    $question = JobQuestion::findOrFail($id);
+    return view('admin.questions.editquestion', compact('question'));
 }
 
     

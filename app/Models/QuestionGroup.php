@@ -11,8 +11,15 @@ class QuestionGroup extends Model
 
     protected $fillable = ['name'];
 
-    public function questions()
-    {
-        return $this->hasMany(JobQuestion::class, 'group_id');
-    }
+  public function questions()
+{
+    return $this->hasMany(\App\Models\JobQuestion::class, 'group_id');
+}
+
+
+public function questionGroup()
+{
+    return $this->belongsTo(QuestionGroup::class);
+}
+
 }

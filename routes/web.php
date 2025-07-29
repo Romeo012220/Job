@@ -7,7 +7,14 @@ use App\Http\Controllers\JobApplicationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\QuestionGroupController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\Admin\QuestionController;
 // Redirect root to login
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/question-groups/{id}', [QuestionGroupController::class, 'show'])->name('question-groups.show');
+    Route::resource('questions', QuestionController::class);
+});
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -60,6 +67,9 @@ Route::middleware(['auth', 'role:user,admin'])->group(function () {
 
 
 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('questions', \App\Http\Controllers\QuestionGroupController::class);
+});
 
 
 
@@ -103,5 +113,29 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         'destroy' => 'admin.questions.destroy',
     ]);
 });
+
+Route::get('question-groups/{id}', [\App\Http\Controllers\Admin\QuestionGroupController::class, 'show'])->name('admin.question-groups.show');
+
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('questions', QuestionController::class);
+});
+
+
+Route::get('/admin/questions/{group}/edit', [QuestionController::class, 'edit'])->name('admin.questions.edit');
+Route::put('/admin/questions/{group}', [QuestionController::class, 'update'])->name('admin.questions.update');
+
+Route::get('/admin/questions/{group}/add', [QuestionController::class, 'addQuestion'])->name('admin.questions.add');
+Route::post('/admin/questions/{group}/add', [QuestionController::class, 'storeQuestion'])->name('admin.questions.storeQuestion');
+
+
+// For updating an individual question
+Route::put('/admin/questions/{id}/update-question', [QuestionGroupController::class, 'updateQuestion'])->name('admin.questions.updatequestion');
+
+// For deleting an individual question
+Route::delete('/admin/questions/{id}/delete', [QuestionGroupController::class, 'deleteQuestion'])->name('admin.questions.delete');
+
+
+
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

@@ -19,4 +19,9 @@ class Question extends Model
     {
         return $this->belongsTo(QuestionGroup::class, 'question_group_id');
     }
+    public function questionGroup()
+{
+    return $this->belongsTo(QuestionGroup::class);
+}
+
 }
