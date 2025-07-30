@@ -9,7 +9,8 @@
         </a>
     </div>
 
-    @forelse ($groups as $group)
+   @forelse ($groups->sortByDesc('created_at') as $group)
+
         <div class="bg-white shadow-md rounded-lg p-6 mb-5 hover:shadow-lg transition">
             <div class="flex justify-between items-start">
                 <div>

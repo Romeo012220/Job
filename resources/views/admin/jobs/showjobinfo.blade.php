@@ -62,6 +62,31 @@
             </div>
         </div>
 
+{{-- Screening Questions --}}
+@if ($job->questionGroup && $job->questionGroup->questions->count())
+    <div class="bg-green-50 border border-green-300 p-6 rounded-xl shadow-md">
+        <h3 class="text-2xl font-semibold text-green-800 mb-5 tracking-wide uppercase">
+            Screening Questions
+        </h3>
+
+        <div class="space-y-4">
+            @foreach ($job->questionGroup->questions as $question)
+                <div class="flex items-start space-x-3">
+                    <div class="text-green-600 font-semibold text-lg">{{ $loop->iteration }}.</div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 w-full">
+                        <p class="text-gray-800 text-base font-medium leading-relaxed">
+                            {{ $question->question }} 
+                        </p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+@endif
+
+
+
+
         {{-- Back Button --}}
         <div>
             <a href="{{ route('admin.jobs.index') }}" 
