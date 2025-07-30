@@ -36,7 +36,10 @@
             <td class="py-2 px-4 border-b">{{ $job->location }}</td>
             <td class="py-2 px-4 border-b">₱{{ number_format($job->salary, 2) }}</td>
             <td class="py-2 px-4 border-b flex space-x-2">
-                <a href="{{ route('jobs.show', $job->id) }}" class="text-blue-600 hover:underline">View</a>
+          <a href="{{ url('admin/jobs/' . $job->id . '/show') }}" class="text-blue-600 hover:underline">View</a>
+
+
+
 
                 @if($job->status === 'open')
                     <form action="{{ route('admin.jobs.close', $job->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to close this job?');">

@@ -193,5 +193,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('applications.show');
 });
 
+Route::get('admin/jobs/{job}/show', [JobController::class, 'show'])->name('admin.jobs.show');
+
+
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

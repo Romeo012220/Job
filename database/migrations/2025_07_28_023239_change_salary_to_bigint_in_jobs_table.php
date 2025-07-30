@@ -15,7 +15,7 @@ return new class extends Migration
      public function down()
     {
         Schema::table('jobs', function (Blueprint $table) {
-            $table->decimal('salary', 15, 2)->nullable(); // Re-add salary if rollback
+         //   $table->decimal('salary', 15, 2)->nullable(); // Re-add salary if rollback
         });
     }
 };

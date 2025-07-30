@@ -12,14 +12,14 @@ return new class extends Migration
 public function up()
 {
     Schema::table('jobs', function (Blueprint $table) {
-        $table->unsignedBigInteger('salary')->default(0);
+      //  $table->unsignedBigInteger('salary')->default(0);
     });
 }
 
 public function down()
 {
     Schema::table('jobs', function (Blueprint $table) {
-        $table->dropColumn('salary');
+     //   $table->dropColumn('salary');
     });
 }
 

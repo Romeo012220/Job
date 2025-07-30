@@ -96,7 +96,8 @@ public function show($id)
             ->exists();
     }
 
-    return view('jobs.show', compact('job', 'alreadyApplied'));
+    // ✅ Change the view path to your actual view file
+    return view('admin.jobs.showjobinfo', compact('job', 'alreadyApplied'));
 }
 
 
