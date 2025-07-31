@@ -132,15 +132,20 @@ public function sendMessage(Request $request)
     });
 
     // Save to DB
-Message::create([
-    'application_id' => $application->id,
-    'message' => $request->message,
-    'sender_type' => 'admin',
-]);
+    Message::create([
+        'application_id' => $application->id,
+        'message' => $request->message,
+        'sender_type' => 'admin',
+    ]);
 
+    // If AJAX, return JSON instead of redirect
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Message sent']);
+    }
 
     return redirect()->back()->with('success', 'Message sent successfully.');
 }
+
 
 
 //user reply message
@@ -153,7 +158,6 @@ public function replyMessage(Request $request)
 
     $application = JobApplication::findOrFail($request->application_id);
 
-    // Optional: Check user owns the application
     if ($application->user_id !== auth()->id()) {
         abort(403);
     }
@@ -164,8 +168,13 @@ public function replyMessage(Request $request)
         'sender_type' => 'user',
     ]);
 
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Reply sent']);
+    }
+
     return redirect()->back()->with('success', 'Reply sent successfully.');
 }
+
 
 public function getMessages(JobApplication $application)
 {

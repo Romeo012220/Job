@@ -136,5 +136,54 @@
             messageList.innerHTML = '';
         });
     });
+
+
+
+
+
+
+    form.addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Message send failed');
+        }
+        return response.json(); // If your controller returns JSON
+    })
+    .then(data => {
+        // Add message to chat window
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex justify-end';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'p-3 max-w-xs rounded-lg shadow text-sm whitespace-pre-wrap bg-blue-500 text-white';
+        bubble.innerHTML = `
+            <div class="font-semibold text-xs mb-1 text-yellow-200">Admin</div>
+            <div>${form.message.value}</div>
+            <div class="text-[10px] opacity-70 mt-1">${new Date().toLocaleString()}</div>
+        `;
+
+        wrapper.appendChild(bubble);
+        messageList.appendChild(wrapper);
+
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        form.reset(); // Clear the form
+    })
+    .catch(error => {
+        alert(error.message);
+    });
+});
+
 </script>
 @endpush

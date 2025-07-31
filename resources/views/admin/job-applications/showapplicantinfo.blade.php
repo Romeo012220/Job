@@ -56,11 +56,6 @@
     @endif
 
     {{-- Back Button --}}
-    <div class="mt-10 text-center">
-        <a href="{{ route('admin.applications.index') }}"
-           class="inline-block px-6 py-3 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-800 transition uppercase">
-            ← Back to Applications
-        </a>
-    </div>
+  
 </div>
 @endsection
