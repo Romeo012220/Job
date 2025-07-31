@@ -210,5 +210,9 @@ Route::post('/admin/jobs/{job}/reopen', [JobController::class, 'reopen'])->name(
 
 
 
+//delete created jobs
+Route::delete('/admin/jobs/{job}', [JobController::class, 'destroy'])->name('admin.jobs.destroy');
+
+
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

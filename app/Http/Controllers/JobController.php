@@ -159,5 +159,13 @@ public function reopen($id)
 }
 
 
+//delete created jobs
+public function destroy(Job $job)
+{
+    $job->delete();
+
+    return redirect()->route('admin.jobs.index')->with('success', 'Job post deleted successfully.');
+}
+
 
 }
