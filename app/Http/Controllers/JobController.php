@@ -148,6 +148,16 @@ public function viewJobPost($id)
 }
 
 
+//reopen closed job
+public function reopen($id)
+{
+    $job = Job::findOrFail($id);
+    $job->status = 'open';
+    $job->save();
+
+    return redirect()->back()->with('success', 'Job successfully reopened.');
+}
+
 
 
 }

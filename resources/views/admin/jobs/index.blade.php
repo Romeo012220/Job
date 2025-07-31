@@ -40,15 +40,20 @@
 
 
 
+@if($job->status === 'open')
+    <form action="{{ route('admin.jobs.close', $job->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to close this job?');">
+        @csrf
+        <button type="submit" class="text-red-600 hover:underline">Close</button>
+    </form>
+@else
+    <form action="{{ route('admin.jobs.reopen', $job->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reopen this job?');">
+        @csrf
+        <button type="submit" class="text-green-600 hover:underline">Reopen</button>
+    </form>
+@endif
 
-                @if($job->status === 'open')
-                    <form action="{{ route('admin.jobs.close', $job->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to close this job?');">
-                        @csrf
-                        <button type="submit" class="text-red-600 hover:underline">Close</button>
-                    </form>
-                @else
-                    <span class="text-gray-500 italic">Closed</span>
-                @endif
+
+
             </td>
         </tr>
     @empty

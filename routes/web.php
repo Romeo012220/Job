@@ -205,6 +205,10 @@ Route::post('/admin/applications/message', [\App\Http\Controllers\JobApplication
 //admin message with user repply
     Route::get('/admin/applications/{application}/messages', [JobApplicationController::class, 'getMessages']);
 
+    //reopen closed job
+Route::post('/admin/jobs/{job}/reopen', [JobController::class, 'reopen'])->name('admin.jobs.reopen');
+
+
 
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';
