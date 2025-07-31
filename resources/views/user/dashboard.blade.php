@@ -15,7 +15,25 @@
                 <h2 class="text-2xl font-semibold text-gray-800 mb-1">
                     {{ strtoupper($application->job->title) }}
                 </h2>
-                <p class="text-gray-600"><strong>Status:</strong> {{ ucfirst($application->status) }}</p>
+             
+             
+  @php
+    $hasAdminMessage = $application->messages->contains(function ($msg) {
+        return $msg->sender_type === 'admin';
+    });
+    $displayStatus = $hasAdminMessage ? 'Reviewed' : 'Pending';
+    $badgeColor = $hasAdminMessage ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+@endphp
+
+<p class="text-sm">
+    <strong>Status:</strong> 
+    <span class="inline-block px-2 py-1 rounded-md text-xs font-semibold {{ $badgeColor }}">
+        {{ $displayStatus }}
+    </span>
+</p>
+
+              
+              
                 <p class="text-sm text-gray-500">
                     <strong>Applied On:</strong> {{ $application->created_at->format('F d, Y') }}
                 </p>
