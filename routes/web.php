@@ -195,6 +195,16 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('admin/jobs/{job}/show', [JobController::class, 'show'])->name('admin.jobs.show');
 
+//admin message
+Route::post('/admin/applications/message', [\App\Http\Controllers\JobApplicationController::class, 'sendMessage'])
+    ->name('admin.applications.sendMessage');
+
+//User reply message
+    Route::post('/messages/reply', [JobApplicationController::class, 'replyMessage'])->name('messages.reply');
+
+//admin message with user repply
+    Route::get('/admin/applications/{application}/messages', [JobApplicationController::class, 'getMessages']);
+
 
 // Auth routes (login, register, etc.)
 require __DIR__.'/auth.php';

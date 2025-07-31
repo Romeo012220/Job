@@ -31,4 +31,12 @@ class JobApplication extends Model
     {
         return $this->hasMany(JobAnswer::class);
     }
+
+    //message
+public function messages()
+{
+    return $this->hasMany(Message::class, 'application_id');
+}
+
+
 }

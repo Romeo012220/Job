@@ -7,6 +7,7 @@ use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Support\Facades\Auth;
 use App\Models\JobAnswer;
+use App\Models\Message;
 use App\Models\JobQuestion;
 
 class JobApplicationController extends Controller
@@ -67,28 +68,30 @@ class JobApplicationController extends Controller
     }
 
     public function myApplications()
-    {
-        $applications = JobApplication::with('job')
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+{
+  $applications = JobApplication::with(['job', 'messages'])
+    ->where('user_id', auth()->id())
+    ->latest()
+    ->paginate(10); // ✅ CORRECT
 
-        return view('user.dashboard', compact('applications'));
-    }
+        
 
-    public function show($id)
-    {
-        $application = JobApplication::with(['answers.question'])->findOrFail($id);
+    return view('user.dashboard', compact('applications'));
+}
 
-        return view('admin.job-applications.showapplicantinfo', compact('application'));
-    }
+public function show($id)
+{
+    $application = JobApplication::with([
+        'answers.question',
+        'messages' => function ($query) {
+            $query->orderBy('created_at', 'asc');
+        }
+    ])->findOrFail($id);
 
-    public function index()
-    {
-        $applications = JobApplication::with('job')->latest()->paginate(10);
+    return view('admin.job-applications.showapplicantinfo', compact('application'));
+}
 
-        return view('admin.job-applications.index', compact('applications'));
-    }
+
 
     public function showUserApplicationInfo($id)
 {
@@ -110,6 +113,65 @@ public function showUserApplication(JobApplication $application)
     return view('applications.showuserapplicationinfo', [
         'application' => $application
     ]);
+}
+
+//message method
+public function sendMessage(Request $request)
+{
+    $request->validate([
+        'application_id' => 'required|exists:applications,id',
+        'message' => 'required|string|max:1000',
+    ]);
+
+    $application = JobApplication::findOrFail($request->application_id);
+
+    // Send email
+    \Mail::raw($request->message, function ($mail) use ($application) {
+        $mail->to($application->email)
+             ->subject('Job Application Status');
+    });
+
+    // Save to DB
+Message::create([
+    'application_id' => $application->id,
+    'message' => $request->message,
+    'sender_type' => 'admin',
+]);
+
+
+    return redirect()->back()->with('success', 'Message sent successfully.');
+}
+
+
+//user reply message
+public function replyMessage(Request $request)
+{
+    $request->validate([
+        'application_id' => 'required|exists:applications,id',
+        'message' => 'required|string|max:1000',
+    ]);
+
+    $application = JobApplication::findOrFail($request->application_id);
+
+    // Optional: Check user owns the application
+    if ($application->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    Message::create([
+        'application_id' => $application->id,
+        'message' => $request->message,
+        'sender_type' => 'user',
+    ]);
+
+    return redirect()->back()->with('success', 'Reply sent successfully.');
+}
+
+public function getMessages(JobApplication $application)
+{
+    return response()->json(
+        $application->messages()->orderBy('created_at')->get()
+    );
 }
 
 
