@@ -155,11 +155,11 @@
             <input type="email" name="email" value="{{ Auth::user()->email }}" readonly required class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-100 text-gray-800" />
         </div>
 
-        <!-- Cover Letter -->
-        <div>
-            <label class="block font-semibold text-gray-800 mb-2">Cover Letter</label>
-            <textarea name="cover_letter" rows="5" class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800 resize-none"></textarea>
-        </div>
+  <!-- Cover Letter -->
+<div>
+    <label class="block font-semibold text-gray-800 mb-2">Cover Letter</label>
+    <textarea name="cover_letter" rows="5" class="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800 resize-none" required></textarea>
+</div>
 
         <!-- Additional Questions -->
         @if($job->questionGroup && $job->questionGroup->questions->count())

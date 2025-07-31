@@ -53,11 +53,12 @@
         </select>
     </div>
 
-    {{-- QUALIFICATIONS FIELD --}}
-    <div class="mb-4">
-        <label class="block font-semibold text-gray-700 mb-1">Qualifications</label>
-        <textarea name="qualifications" class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="List any required skills or experience..."></textarea>
-    </div>
+ {{-- QUALIFICATIONS FIELD --}}
+<div class="mb-4">
+    <label class="block font-semibold text-gray-700 mb-1">Qualifications</label>
+    <textarea name="qualifications" class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="List any required skills or experience..." required></textarea>
+</div>
+
 
   {{-- JOB CATEGORY (TYPE) FIELD --}}
 <div class="mb-4">
