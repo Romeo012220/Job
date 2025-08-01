@@ -12,15 +12,28 @@ use App\Models\JobQuestion;
 
 class JobApplicationController extends Controller
 {
-  public function showApplyForm($id)
+
+    public function showApplyForm($id)
 {
-    $job = Job::with('questionGroup.questions')->findOrFail($id);
+
+    //question randomized
+  $job = Job::with('questionGroup.questions')->findOrFail($id);
+$questions = $job->questionGroup?->questions->shuffle()->take(5); // 👈 Random 5
+
+return view('jobs.apply', compact('job', 'questions', 'alreadyApplied'));
+
 
     $alreadyApplied = JobApplication::where('job_id', $id)
         ->where('user_id', auth()->id())
         ->exists();
 
-    return view('jobs.apply', compact('job', 'alreadyApplied'));
+    $questions = [];
+
+    if ($job->questionGroup && $job->questionGroup->questions->count() > 0) {
+        $questions = $job->questionGroup->questions->shuffle()->take(5);
+    }
+
+    return view('jobs.apply', compact('job', 'questions', 'alreadyApplied'));
 }
 
 

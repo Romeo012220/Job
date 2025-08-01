@@ -165,7 +165,9 @@
         @if($job->questionGroup && $job->questionGroup->questions->count())
             <div class="mt-4">
                 <h3 class="font-semibold text-lg mb-2">Additional Questions</h3>
-                @foreach($job->questionGroup->questions as $question)
+           @foreach($job->questionGroup->questions->shuffle()->take(5) as $question)
+
+
                     <div class="mb-3">
                         <label class="block text-gray-700 mb-1">{{ $question->question }}</label>
                         <input type="text" name="answers[{{ $question->id }}]" class="w-full border px-3 py-2 rounded focus:ring-blue-500 focus:border-blue-500" required />
