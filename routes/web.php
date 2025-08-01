@@ -214,11 +214,20 @@ Route::post('/admin/jobs/{job}/reopen', [JobController::class, 'reopen'])->name(
 Route::delete('/admin/jobs/{job}', [JobController::class, 'destroy'])->name('admin.jobs.destroy');
 
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Other routes...
 
+
+// question edit
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('questions/{id}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
     Route::put('questions/{id}', [QuestionController::class, 'update'])->name('questions.update');
 });
-// Auth routes (login, register, etc.)
+
+
+
+// delete questions
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::delete('questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+});
+
+
 require __DIR__.'/auth.php';
