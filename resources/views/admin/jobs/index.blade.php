@@ -12,6 +12,18 @@
         </div>
     @endif
 
+
+<form method="GET" action="{{ route('admin.jobs.index') }}" class="mb-4 flex items-center gap-2">
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search job title..."
+           class="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-64">
+    <button type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        🔍 Search
+    </button>
+</form>
+
+
+
     <div class="overflow-x-auto bg-white shadow-lg rounded-lg border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
             <thead class="bg-gray-50 text-xs uppercase tracking-wider text-gray-600">

@@ -165,6 +165,8 @@
         @if($job->questionGroup && $job->questionGroup->questions->count())
             <div class="mt-4">
                 <h3 class="font-semibold text-lg mb-2">Additional Questions</h3>
+
+                <!-- randomized questions -->
            @foreach($job->questionGroup->questions->shuffle()->take(5) as $question)
 
 

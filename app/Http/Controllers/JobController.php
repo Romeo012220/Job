@@ -79,7 +79,13 @@ Job::create([
 }
 public function adminIndex()
 {
-    $jobs = Job::latest()->paginate(10); // You can use ->get() instead of paginate if you want
+  $search = request('search');
+$jobs = Job::when($search, function ($query, $search) {
+        return $query->where('title', 'like', "%{$search}%");
+    })
+    ->latest()
+    ->paginate(10);
+
     return view('admin.jobs.index', compact('jobs'));
 }
 
